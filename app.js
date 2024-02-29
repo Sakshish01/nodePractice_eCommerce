@@ -9,6 +9,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const offerRoutes = require("./routes/offerRoutes");
 
+
 const app = express();
 connect();
 app.use(express.json());

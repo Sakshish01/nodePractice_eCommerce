@@ -40,6 +40,7 @@ const IsEmailValid = (email) => {
 
 const register = asyncHandler(async (req, res) => {
   try {
+    console.log(req.file);
     const { username, email, name, phoneNo, password } = req.body;
 
     // console.log("username", req.body.username);
@@ -79,10 +80,13 @@ const register = asyncHandler(async (req, res) => {
       password,
     });
 
+    newUser.profileImage = req.file.path; 
+
     if (req.body.role && req.body.role !== null) {
       newUser.role = req.body.role;
-      await newUser.save();
     }
+
+    await newUser.save();
 
     return sendSuccessResponse(res, "User registered", newUser);
   } catch (error) {
@@ -136,7 +140,7 @@ const login = asyncHandler(async (req, res) => {
       .cookie("RefreshAccessToken", RefreshAccessToken, options)
       .json({
         status: true,
-        message: "User logged in",
+        message: `${existingUser.role} logged in`,
         token: AccessToken,
       });
   } catch (error) {
