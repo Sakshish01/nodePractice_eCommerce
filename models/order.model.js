@@ -24,6 +24,10 @@ const orderSchema = Schema(
         },
       },
     ],
+    offerId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Offer'
+    },
     totalAmount: {
       type: Number,
       required: true,
