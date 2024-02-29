@@ -12,7 +12,8 @@ const offerSchema = new Schema({
     },
     code: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     discountType: {
         type: String,
@@ -35,11 +36,21 @@ const offerSchema = new Schema({
         type: Number,
         required: true
     },
+    userType: {
+        type: String,
+        enum: ["new", "old", "all"],
+        default: "all"
+    },
     orders: [{
         type: Schema.Types.ObjectId,
         ref: 'Order',
         required: true
-    }]
+    }],
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'active'
+    }
 });
 
 module.exports = mongoose.model('Offer', offerSchema);

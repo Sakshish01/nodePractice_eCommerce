@@ -1,15 +1,22 @@
 const asyncHandler = require("express-async-handler");
 const Offer = require("../models/offer.model");
-const { handleOtherError, sendSuccessResponse } = require("../utils/response");
+const { handleOtherError, sendSuccessResponse, handleServerError } = require("../utils/response");
 
 const add = asyncHandler(async(req, res) => {
 try {
-        const {name, description, code, discountType, discount, expiresAt, minAmountToApply, useLimit} = req.body;
+        const {name, description, code, discountType, discount, expiresAt, minAmountToApply, useLimit, userType} = req.body;
     
         if([name, description, code, discountType, discount, expiresAt, minAmountToApply, useLimit].some(field => !field)){
             return handleOtherError(res, 404, "All fields are required");
         }
+
+        const existingOffer = await Offer.findOne({code});
+
+        if(existingOffer){
+            return handleOtherError(res, 400, "Code already exists");
+        }
     
+        
         const parseExpiry = new Date(expiresAt);
     
         const newOffer = await Offer.create({
@@ -20,11 +27,17 @@ try {
             discount,
             expiresAt: parseExpiry, 
             minAmountToApply: parseInt(minAmountToApply), 
-            useLimit: parseInt(useLimit)
+            useLimit: parseInt(useLimit),
         });
+
+        if(userType){
+            newOffer.userType = userType;
+            await newOffer.save();
+        }
     
         return sendSuccessResponse(res, "Offer added", newOffer);
 } catch (error) {
+    console.log(error);
     if (error.name === "ValidationError") {
         // Handle validation errors
         return handleValidationError(error.message, res);
@@ -35,4 +48,52 @@ try {
 }
 });
 
-module.exports = {add};
+const edit = asyncHandler(async(req, res) => {
+
+    const {code} = req.body;
+
+    const offerId = req.params.id;
+
+    const existingOffer = await Offer.findById(offerId);
+
+    if(!existingOffer){
+        return handleOtherError(res, 404, "Offer not exists");
+    }
+
+    if(code){
+        const existingCode = await Offer.findOne({code});
+        if(existingCode){
+            return handleOtherError(res, 409, "Code already exists");
+        }
+        existingOffer.code = code;
+    }
+
+    Object.assign(existingOffer, req.body);
+
+    return sendSuccessResponse(res, "Offer updated", existingOffer);
+
+});
+
+const view = asyncHandler(async(req, res) => {
+    const offerId = req.params.id;
+
+    const existingOffer = await Offer.findById(offerId);
+
+    if(!existingOffer){
+        return handleOtherError(res, 404, "Offer not exists");
+    }
+
+    return sendSuccessResponse(res, "Offer data retrieved", existingOffer);
+});
+
+const offerList = asyncHandler(async(req, res) => {
+    const offers = await Offer.find();
+
+    if(!offers){
+        return handleOtherError(res, 404, "No offers exists");
+    }
+
+    return sendSuccessResponse(res, "Offer list retrieved", offers);
+});
+
+module.exports = {add, edit, view, offerList};
