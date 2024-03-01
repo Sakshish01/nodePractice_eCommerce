@@ -13,6 +13,8 @@ const {
 const bcrypt = require("bcrypt");
 const userOtp = require("../models/userOtp.model");
 
+const cloudinaryUpload = require("../utils/cloudinary");
+
 // functions
 const IsPasswordValidate = (password) => {
   // Length range validation
@@ -80,7 +82,10 @@ const register = asyncHandler(async (req, res) => {
       password,
     });
 
-    newUser.profileImage = req.file.path; 
+    const file = await cloudinaryUpload(req.file.path);
+    // console.log(file.url);
+
+    newUser.profileImage = file.url; 
 
     if (req.body.role && req.body.role !== null) {
       newUser.role = req.body.role;
