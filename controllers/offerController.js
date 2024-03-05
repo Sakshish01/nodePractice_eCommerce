@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Offer = require("../models/offer.model");
 const { handleOtherError, sendSuccessResponse, handleServerError } = require("../utils/response");
+const cloudinaryUpload = require("../utils/cloudinary");
 
 const add = asyncHandler(async(req, res) => {
 try {
@@ -30,10 +31,15 @@ try {
             useLimit: parseInt(useLimit),
         });
 
+        if(req.file){
+            const file = await cloudinaryUpload(req.file.path);
+            newOffer.image = file.url;
+        }
+
         if(userType){
             newOffer.userType = userType;
-            await newOffer.save();
         }
+        await newOffer.save();
     
         return sendSuccessResponse(res, "Offer added", newOffer);
 } catch (error) {
@@ -70,6 +76,12 @@ const edit = asyncHandler(async(req, res) => {
 
     Object.assign(existingOffer, req.body);
 
+    if(req.file){
+        const file = await cloudinaryUpload(req.file.path);
+        existingOffer.image = file.url;
+        await existingOffer.save();
+    }
+
     return sendSuccessResponse(res, "Offer updated", existingOffer);
 
 });
@@ -95,5 +107,6 @@ const offerList = asyncHandler(async(req, res) => {
 
     return sendSuccessResponse(res, "Offer list retrieved", offers);
 });
+
 
 module.exports = {add, edit, view, offerList};

@@ -42,7 +42,6 @@ const IsEmailValid = (email) => {
 
 const register = asyncHandler(async (req, res) => {
   try {
-    console.log(req.file);
     const { username, email, name, phoneNo, password } = req.body;
 
     // console.log("username", req.body.username);
@@ -85,7 +84,7 @@ const register = asyncHandler(async (req, res) => {
     const file = await cloudinaryUpload(req.file.path);
     // console.log(file.url);
 
-    newUser.profileImage = file.url; 
+    newUser.profileImage = file.url;
 
     if (req.body.role && req.body.role !== null) {
       newUser.role = req.body.role;
@@ -288,6 +287,34 @@ const changePassword = asyncHandler(async (req, res) => {
   return sendSuccessResponse(res, "Password changed");
 });
 
+// user routes
+const edit = asyncHandler(async (req, res) => {
+  // const userId = req.params.id;
+
+  const existingUser = await User.findById(req.user.userId);
+  if (!existingUser) {
+    return handleOtherError(res, 404, "User not found");
+  }
+
+  if (req.file) {
+    const file = await cloudinaryUpload(req.file.path);
+    existingUser.profileImage = file.url;
+    await existingUser.save();
+  }
+
+  Object.assign(existingUser, req.body);
+
+  return sendSuccessResponse(res, "User details updated", existingUser);
+});
+
+const view = asyncHandler(async (req, res) => {
+  const currentUser = await User.findById(req.user.userId);
+  if (!currentUser) {
+    return handleOtherError(res, 404, "User not found");
+  }
+
+  return sendSuccessResponse(res, "User data retrieved", currentUser);
+});
 
 module.exports = {
   register,
@@ -297,4 +324,6 @@ module.exports = {
   otpVerify,
   resetPassword,
   changePassword,
+  edit,
+  view
 };

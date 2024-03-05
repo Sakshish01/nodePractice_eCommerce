@@ -36,6 +36,9 @@ const offerSchema = new Schema({
         type: Number,
         required: true
     },
+    image: {
+        type: String
+    },
     userType: {
         type: String,
         enum: ["new", "old", "all"],

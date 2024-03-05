@@ -17,14 +17,19 @@ const addCategory = asyncHandler( async(req, res) => {
         name
     });
 
+    if(req.file){
+        const file = await cloudinaryUpload(req.file.path);
+        newCategory.image = file.url;
+    }
+
     if(parentId){
         const parentCategory = await Category.findById(parentId);
         if(!parentCategory){
             return handleOtherError(res, 404, "Parent category id not exists");
         }
         newCategory.parent = parentCategory._id;
-        await newCategory.save();
     }
+    await newCategory.save();
 
     return sendSuccessResponse(res, "Category created", newCategory);
 });
@@ -35,11 +40,15 @@ const editCategory = asyncHandler(async (req, res) => {
     if(!existingCategory){
         return handleOtherError(res, 404, "Category not exists");
     }
+    if(req.file){
+        const file = await cloudinaryUpload(req.file.path);
+        existingCategory.image = file.url;
+    }
     if(name || parentId){
         existingCategory.name = name;
         existingCategory.parent = parentId;
-        await existingCategory.save();
     }
+    await existingCategory.save();
     return sendSuccessResponse(res, "Category updated", existingCategory);
 });
 
