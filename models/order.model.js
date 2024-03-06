@@ -14,7 +14,7 @@ const orderSchema = Schema(
           type: Schema.Types.ObjectId,
           ref: "Product",
         },
-        qunatity: {
+        quantity: {
           type: Number,
           required: true,
         },
@@ -35,7 +35,7 @@ const orderSchema = Schema(
     shippingAddress: {
       type: Schema.Types.ObjectId,
       ref: "Address",
-      required: true,
+      // required: true,
     },
     status: {
       type: String,

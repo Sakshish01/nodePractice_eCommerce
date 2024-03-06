@@ -50,7 +50,7 @@ const addOrUpdateAddress = asyncHandler(async(req, res) => {
 
     await existingAddress.save();
 
-    return sendSuccessResponse(res, "Address added/updated", existingAddress);
+    return sendSuccessResponse(res, "Address added/ updated", existingAddress);
 });
 
 const deleteAddress = asyncHandler(async (req, res) => {

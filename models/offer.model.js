@@ -39,11 +39,11 @@ const offerSchema = new Schema({
     image: {
         type: String
     },
-    userType: {
-        type: String,
-        enum: ["new", "old", "all"],
-        default: "all"
-    },
+    // userType: {
+    //     type: String,
+    //     enum: ["new", "old", "all"],
+    //     default: "all"
+    // },
     orders: [{
         type: Schema.Types.ObjectId,
         ref: 'Order',
