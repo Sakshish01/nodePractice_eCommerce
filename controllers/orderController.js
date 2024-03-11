@@ -24,6 +24,8 @@ const place = asyncHandler(async (req, res) => {
       product: item.product,
       quantity: item.quantity,
       price: item.price,
+      size: item.size,
+      colour: item.colour
     })),
     totalAmount: existingCart.totalPrice,
   });
@@ -113,6 +115,13 @@ const viewOrder = asyncHandler(async (req, res) => {
   }
 
   return sendSuccessResponse(res, "Order retrieved", existingOrder);
+});
+
+const replaceOrder = asyncHandler(async(req, res) => {
+});
+
+const returnOrder = asyncHandler(async(req, res) => {
+
 });
 
 module.exports = { place, cancel, orderHistory, viewOrder };

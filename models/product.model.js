@@ -26,6 +26,32 @@ const productSchema = new Schema(
     quantity: {
         type: Number,
         required: true
+    },
+    isReplacable: {
+      type:Boolean,
+      default: true
+    },
+    isReturnable: {
+      type: Boolean,
+      default: true
+    },
+    returnPeriodDays: {
+      type: Number,
+      default: 7
+    },
+    availableSizes: [{
+      type: String
+    }],
+    availableColours: [{
+      type: String,
+    }],
+    defaultSize: {
+      type: String,
+      required: true
+    },
+    defaultColour: {
+      type: String,
+      required: true
     }
   },
   {

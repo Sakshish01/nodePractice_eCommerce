@@ -22,6 +22,14 @@ const orderSchema = Schema(
           type: Number,
           required: true,
         },
+        size: {
+          type: String,
+          required: false
+        },
+        colour: {
+          type: String,
+          required: false
+        }
       },
     ],
     offerId: {
@@ -39,8 +47,8 @@ const orderSchema = Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
-      default: "Pending",
+      enum: ["Pending", "Shipped", "Delivered", "Cancelled", "Returning", "Returned", "Replacing", "Replaced"],
+      default: "Pending"
     }
   },
   {

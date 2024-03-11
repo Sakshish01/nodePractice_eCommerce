@@ -8,7 +8,7 @@ const addItemsPrice = (items) => {
 };
 
 const add = asyncHandler(async (req, res) => {
-  const { product, quantity } = req.body;
+  const { product, quantity, selectedSize, selectedColour } = req.body;
   if ([product, quantity].some((field) => !field)) {
     return handleOtherError(res, 404, "All fields are required");
   }
@@ -41,10 +41,28 @@ const add = asyncHandler(async (req, res) => {
     //item found
     cart.items[existingItemIndex].quantity += parseInt(quantity);
   }
+  
+
+  let size = existingProduct.defaultSize;;
+  if(selectedSize || existingProduct.availableSizes.includes(selectedSize) ){
+    size = selectedSize
+  }else{
+    return handleOtherError(res, 404, "Selected size is unavailable");
+  }
+
+  let colour = existingProduct.defaultColour;
+  if(selectedColour || existingProduct.availableColours.includes(selectedColour)){
+      colour = selectedColour;
+  }else{
+    return handleOtherError(res, 404, "Selected colour is unavailable");
+  }
+
   cart.items.push({
     product: existingProduct._id,
     quantity: parseInt(quantity),
     price: existingProduct.price * quantity,
+    size,
+    colour
   });
 
   cart.totalPrice = addItemsPrice(cart.items);
@@ -188,6 +206,6 @@ const viewItem = asyncHandler(async (req, res) => {
     }
 
     return sendSuccessResponse(res, "Item retrieved", existingItem);
-})
+});
 
 module.exports = { add, update, remove, viewCart, clearCart, viewItem};
