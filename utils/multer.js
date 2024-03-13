@@ -36,9 +36,19 @@ const offerImageStorage = multer.diskStorage({
     }
 });
 
+const reviewUpdateStorage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, 'public/reviewUploads')
+    },
+    filename: function (req, file, cb){
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+})
+
 const profileUpload = multer({storage: profileStorage});
 const productUpload = multer({storage: productImageStorage});
 const categoryUpload = multer({storage: categoryImageStorage});
 const offerUpload = multer({storage: offerImageStorage});
+const reviewUpload = multer({storage: reviewUpdateStorage});
 
-module.exports = { profileUpload, productUpload, categoryUpload, offerUpload };
+module.exports = { profileUpload, productUpload, categoryUpload, offerUpload, reviewUpload };

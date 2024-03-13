@@ -52,7 +52,21 @@ const productSchema = new Schema(
     defaultColour: {
       type: String,
       required: true
-    }
+    },
+    // averageRating: {
+    //   type: Number,
+    //   min: 1,
+    //   max: 5,
+    //   default: 0
+    // },
+    // totalRatingUsers: {
+    //   type: Number,
+    //   default: 0
+    // },
+    // totalReviews: {
+    //   type: Number,
+    //   default: 0
+    // }
   },
   {
     timestamps: true,

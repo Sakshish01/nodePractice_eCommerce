@@ -117,11 +117,48 @@ const viewOrder = asyncHandler(async (req, res) => {
   return sendSuccessResponse(res, "Order retrieved", existingOrder);
 });
 
-const replaceOrder = asyncHandler(async(req, res) => {
-});
+// const replaceOrderItem = asyncHandler(async(req, res) => {
+//   const {orderId, itemId} = req.params;
+//   const {reason, selectedSize, selectedColour, quantity} = req.body;
+//   const existingOrder = await Order.findOne({ _id: orderId, user: req.user.userId });
 
-const returnOrder = asyncHandler(async(req, res) => {
+//   if(!existingOrder){
+//     return handleOtherError(res, 404, "Order not exists");
+//   }
 
-});
+//   const existingItemIndex = await existingOrder.items.findIndex(item => item._id.toString() === itemId);
+
+//   if(existingItemIndex === -1){
+//     return handleOtherError(res, 404, "Item not found");
+//   }
+
+//   const itemProductId = existingOrder.items[existingItemIndex].product;
+//   const existingProduct = await Product.findById(itemProductId);
+
+//   let size = existingOrder.items[existingItemIndex].size;
+//   if(selectedSize || existingProduct.availableSizes.includes(selectedSize) ){
+//     size = selectedSize;
+//   }else{
+//     return handleOtherError(res, 404, "Selected size is unavailable");
+//   }
+
+//   let colour = existingOrder.items[existingItemIndex].colour;
+//   if(selectedColour || existingProduct.availablecolours.includes(selectedColour) ){
+//     colour = selectedColour;
+//   }else{
+//     return handleOtherError(res, 404, "Selected colour is unavailable");
+//   }
+//   let quantityAdd = quantity ? quantity : existingOrder.items[existingItemIndex].quantity;
+//   existingOrder.items[existingItemIndex] = {
+//     quantityAdd,
+//     size,
+//     colour
+//   }
+
+// });
+
+// const returnOrder = asyncHandler(async(req, res) => {
+
+// });
 
 module.exports = { place, cancel, orderHistory, viewOrder };
